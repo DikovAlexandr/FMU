@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmiModelDescription fmiVersion="2.0" generationDateAndTime="2025-06-19T14:49:23+00:00" generationTool="PythonFMU 0.6.7" guid="96b13a54-4d1c-11f0-9ccc-c2b73fdea59e" modelName="ControllerFMU" variableNamingConvention="structured">
+	<CoSimulation canBeInstantiatedOnlyOncePerProcess="false" canGetAndSetFMUstate="false" canHandleVariableCommunicationStepSize="true" canInterpolateInputs="false" canNotUseMemoryManagementFunctions="true" canSerializeFMUstate="false" modelIdentifier="ControllerFMU" needsExecutionTool="true">
+		<SourceFiles>
+			<File name="src/cppfmu/cppfmu_common.hpp"/>
+			<File name="src/cppfmu/cppfmu_cs.hpp"/>
+			<File name="src/pythonfmu/PyState.hpp"/>
+			<File name="src/pythonfmu/IPyState.hpp"/>
+			<File name="src/pythonfmu/PySlaveInstance.hpp"/>
+			<File name="src/cppfmu/fmi_functions.cpp"/>
+			<File name="src/cppfmu/cppfmu_cs.cpp"/>
+			<File name="src/pythonfmu/PySlaveInstance.cpp"/>
+			<File name="CMakeLists.txt"/>
+			<File name="src/CMakeLists.txt"/>
+		</SourceFiles>
+	</CoSimulation>
+	<LogCategories>
+		<Category description="Log messages with fmi2Warning status." name="logStatusWarning"/>
+		<Category description="Log messages with fmi2Discard status." name="logStatusDiscard"/>
+		<Category description="Log messages with fmi2Error status." name="logStatusError"/>
+		<Category description="Log messages with fmi2Fatal status." name="logStatusFatal"/>
+		<Category description="Log all messages." name="logAll"/>
+	</LogCategories>
+	<ModelVariables>
+		<ScalarVariable causality="input" name="angle_0" valueReference="0" variability="continuous">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable causality="input" name="angle_target_0" valueReference="1" variability="continuous">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable causality="input" name="velocity_0" valueReference="2" variability="continuous">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable causality="input" name="velocity_target_0" valueReference="3" variability="continuous">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable causality="input" name="acceleration_target_0" valueReference="4" variability="continuous">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable causality="output" initial="calculated" name="torque_0" valueReference="5" variability="continuous">
+			<Real/>
+		</ScalarVariable>
+		<ScalarVariable causality="input" name="angle_1" valueReference="6" variability="continuous">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable causality="input" name="angle_target_1" valueReference="7" variability="continuous">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable causality="input" name="velocity_1" valueReference="8" variability="continuous">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable causality="input" name="velocity_target_1" valueReference="9" variability="continuous">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable causality="input" name="acceleration_target_1" valueReference="10" variability="continuous">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable causality="output" initial="calculated" name="torque_1" valueReference="11" variability="continuous">
+			<Real/>
+		</ScalarVariable>
+		<ScalarVariable causality="input" name="angle_2" valueReference="12" variability="continuous">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable causality="input" name="angle_target_2" valueReference="13" variability="continuous">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable causality="input" name="velocity_2" valueReference="14" variability="continuous">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable causality="input" name="velocity_target_2" valueReference="15" variability="continuous">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable causality="input" name="acceleration_target_2" valueReference="16" variability="continuous">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable causality="output" initial="calculated" name="torque_2" valueReference="17" variability="continuous">
+			<Real/>
+		</ScalarVariable>
+		<ScalarVariable causality="input" name="angle_3" valueReference="18" variability="continuous">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable causality="input" name="angle_target_3" valueReference="19" variability="continuous">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable causality="input" name="velocity_3" valueReference="20" variability="continuous">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable causality="input" name="velocity_target_3" valueReference="21" variability="continuous">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable causality="input" name="acceleration_target_3" valueReference="22" variability="continuous">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable causality="output" initial="calculated" name="torque_3" valueReference="23" variability="continuous">
+			<Real/>
+		</ScalarVariable>
+		<ScalarVariable causality="input" name="angle_4" valueReference="24" variability="continuous">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable causality="input" name="angle_target_4" valueReference="25" variability="continuous">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable causality="input" name="velocity_4" valueReference="26" variability="continuous">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable causality="input" name="velocity_target_4" valueReference="27" variability="continuous">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable causality="input" name="acceleration_target_4" valueReference="28" variability="continuous">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable causality="output" initial="calculated" name="torque_4" valueReference="29" variability="continuous">
+			<Real/>
+		</ScalarVariable>
+		<ScalarVariable causality="input" name="angle_5" valueReference="30" variability="continuous">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable causality="input" name="angle_target_5" valueReference="31" variability="continuous">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable causality="input" name="velocity_5" valueReference="32" variability="continuous">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable causality="input" name="velocity_target_5" valueReference="33" variability="continuous">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable causality="input" name="acceleration_target_5" valueReference="34" variability="continuous">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable causality="output" initial="calculated" name="torque_5" valueReference="35" variability="continuous">
+			<Real/>
+		</ScalarVariable>
+		<ScalarVariable causality="parameter" name="kp" valueReference="36" variability="tunable">
+			<Real start="3000"/>
+		</ScalarVariable>
+		<ScalarVariable causality="parameter" name="kd" valueReference="37" variability="tunable">
+			<Real start="10"/>
+		</ScalarVariable>
+	</ModelVariables>
+	<ModelStructure>
+		<Outputs>
+			<Unknown index="6"/>
+			<Unknown index="12"/>
+			<Unknown index="18"/>
+			<Unknown index="24"/>
+			<Unknown index="30"/>
+			<Unknown index="36"/>
+		</Outputs>
+	</ModelStructure>
+</fmiModelDescription>
