@@ -20,6 +20,16 @@ class DynamicsFMU(Fmi2Slave):
         
         default_dt = 0.05
 
+        self.register_variable(
+            Real(
+                "dt", 
+                causality=Fmi2Causality.input,
+                variability=Fmi2Variability.continuous,
+                start=default_dt
+            )
+        )
+        setattr(self, "dt", default_dt)
+
         for i in range(self.n):
             name = f"angle_{i}"
             self.register_variable(
@@ -83,16 +93,6 @@ class DynamicsFMU(Fmi2Slave):
                     initial="calculated"
                 )
             )
-
-        self.register_variable(
-            Real(
-                "dt", 
-                causality=Fmi2Causality.parameter,
-                variability=Fmi2Variability.tunable,
-                start=default_dt
-            )
-        )
-        setattr(self, "dt", default_dt)
 
     def do_step(self, current_time, step_size):
         angles = np.array([

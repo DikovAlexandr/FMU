@@ -15,6 +15,9 @@ public class Main {
         try {
             tester.init();
             switch (type) {
+                case "test":
+                    tester.testTest();
+                    break;
                 case "controller":
                     tester.testController();
                     break;

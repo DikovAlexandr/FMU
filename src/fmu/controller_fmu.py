@@ -21,6 +21,26 @@ class ControllerFMU(Fmi2Slave):
         default_kp = 3e3
         default_kd = 10.0
 
+        name = "kp"
+        self.register_variable(
+            Real(name,
+                 causality=Fmi2Causality.input,
+                 variability=Fmi2Variability.continuous,
+                 start=default_kp
+            )
+        )
+        setattr(self, name, float(default_kp))
+
+        name = "kd"
+        self.register_variable(
+            Real(name,
+                 causality=Fmi2Causality.input,
+                 variability=Fmi2Variability.continuous,
+                 start=default_kd
+            )
+        )
+        setattr(self, name, float(default_kd))
+
         for i in range(self.n):
             name = f"angle_{i}"
             self.register_variable(
@@ -76,26 +96,6 @@ class ControllerFMU(Fmi2Slave):
                      variability=Fmi2Variability.continuous,
                      initial="calculated")
             )
-
-        name = "kp"
-        self.register_variable(
-            Real(name,
-                 causality=Fmi2Causality.parameter,
-                 variability=Fmi2Variability.tunable,
-                 start=default_kp
-            )
-        )
-        setattr(self, name, float(default_kp))
-
-        name = "kd"
-        self.register_variable(
-            Real(name,
-                 causality=Fmi2Causality.parameter,
-                 variability=Fmi2Variability.tunable,
-                 start=default_kd
-            )
-        )
-        setattr(self, name, float(default_kd))
 
     def do_step(self, current_time, step_size):
         kp = getattr(self, "kp")

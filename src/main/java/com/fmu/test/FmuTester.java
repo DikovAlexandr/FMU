@@ -1,6 +1,7 @@
 package com.fmu.test;
 
 import no.ntnu.ihb.fmi4j.importer.fmi2.Fmu;
+// import no.ntnu.ihb.fmi4j.importer.fmi2.FmuSlave;
 import no.ntnu.ihb.fmi4j.importer.fmi2.CoSimulationSlave;
 
 import no.ntnu.ihb.fmi4j.modeldescription.ModelDescription;
@@ -69,19 +70,11 @@ public class FmuTester {
                 tmpOutVrs.add(sv.getValueReference());
                 tmpOutNames.add(sv.getName());
             }
-        }
-
-        for (int i = 0; i < size; i++) {
-            var sv = vars.get(i);
             if (sv.getCausality() == Causality.OUTPUT) {
                 outputCount++;
                 tmpOutVrs.add(sv.getValueReference());
                 tmpOutNames.add(sv.getName());
             }
-        }
-        
-        for (int i = 0; i < size; i++) {
-            var sv = vars.get(i);
             if (sv.getCausality() == Causality.INPUT
             || sv.getCausality() == Causality.PARAMETER) {
                 inputCount++;
@@ -128,82 +121,122 @@ public class FmuTester {
                           inCount, outputCount, localCount);
     }
 
-    public void testController() throws Exception {
-        try (CoSimulationSlave slave = fmu.asCoSimulationFmu().newInstance()) {
-            double[] angles = new double[]{0.0, Math.PI/2, -Math.PI/2, 0.0, 0.0, 0.0};
-            double[] velocities = new double[6];
+    public void testTest() throws Exception {
+        CoSimulationSlave slave = fmu.asCoSimulationFmu().newInstance();
 
-            double[] targetAngles = new double[]{ 7.7366e-06, 1.5708e+00, -1.5708e+00, 7.7366e-06, 7.7366e-06, 7.7366e-06};
-            double[] targetVel = new double[]{0.0005, -0.0009, 0.0009, 0.0005, 0.0005, 0.0005};
-            double[] targetsAcc = new double[]{0.0183, -0.0366, 0.0366, 0.0183, 0.0183, 0.0183};
+        slave.simpleSetup();
 
-            double[] inVals = new double[inVrs.length];
+        double[] inVals = new double[inVrs.length];
 
-            boolean[] setFlags = new boolean[inVrs.length];
+        boolean[] setFlags = new boolean[inVrs.length];
 
-            double kp = 3000.0;
-            // inVals[name2inIdx.get("kp")] = kp;
-            // setFlags[name2inIdx.get("kp")] = true;
+        inVals[name2inIdx.get("u1")] = 0;
+        setFlags[name2inIdx.get("u1")] = true;
 
-            int idxKp = name2inIdx.get("kp");
-            long vrKp = inVrs[idxKp];
-            
-            double kd = 10.0;
-            // inVals[name2inIdx.get("kd")] = kd;
-            // setFlags[name2inIdx.get("kd")] = true;
-
-            int idxKd = name2inIdx.get("kd");
-            long vrKd = inVrs[idxKd];
-            
-            for (int j = 0; j < 6; j++) {
-                inVals[name2inIdx.get("angle_" + j)] = angles[j];
-                setFlags[name2inIdx.get("angle_" + j)] = true;
-
-                inVals[name2inIdx.get("angle_target_" + j)] = targetAngles[j];
-                setFlags[name2inIdx.get("angle_target_" + j)] = true;
-
-                inVals[name2inIdx.get("velocity_" + j)] = velocities[j];
-                setFlags[name2inIdx.get("velocity_" + j)] = true;
-
-                inVals[name2inIdx.get("velocity_target_" + j)] = targetVel[j];
-                setFlags[name2inIdx.get("velocity_target_" + j)] = true;
-
-                inVals[name2inIdx.get("acceleration_target_" + j)] = targetsAcc[j];
-                setFlags[name2inIdx.get("acceleration_target_" + j)] = true;
-            }
-
-            System.out.println("=== Input coverage ===");
-            for (int i = 0; i < inNames.length; i++) {
-                System.out.printf("%-25s : %s%n",
-                    inNames[i],
-                    setFlags[i] 
-                    ? String.format("SET (value=%.5f)", inVals[i]) 
-                    : "NOT SET!");
-            }
-            
-            slave.setupExperiment();
-            slave.enterInitializationMode();
-
-            slave.writeReal(new long[]{vrKp, vrKd}, new double[]{kp, kd});
-            slave.writeReal(inVrs, inVals);
-
-            slave.exitInitializationMode();
-            
-            slave.doStep(0.0, 0.01);
-
-            double[] outVals = new double[outVrs.length];
-            slave.readReal(outVrs, outVals);
-
-            System.out.println("Torques:");
-            for (int j = 0; j < 6; j++) {
-                double tq = outVals[name2outIdx.get("torque_" + j)];
-                System.out.printf(" Joint %d: %.3f%n", j, tq);
-            }
-
-            slave.terminate();
-            fmu.close();
-            fmu = null;
+        System.out.println("=== Input coverage ===");
+        for (int i = 0; i < inNames.length; i++) {
+            System.out.printf("%-25s : %s%n",
+                inNames[i],
+                setFlags[i] 
+                ? String.format("SET (value=%.5f)", inVals[i]) 
+                : "NOT SET!");
         }
+
+        slave.writeReal(inVrs, inVals);
+
+        slave.exitInitializationMode();
+        
+        slave.doStep(0.0, 0.1);
+
+        double[] outVals = new double[outVrs.length];
+        slave.readReal(outVrs, outVals);
+
+        System.out.println("Output:");
+        double tq = outVals[name2outIdx.get("y1")];
+        System.out.printf(" Joint %.3f%n", tq);
+
+        slave.terminate();
+        fmu.close();
+    }
+
+    public void testController() throws Exception {
+        // try (CoSimulationSlave slave = fmu.asCoSimulationFmu().newInstance()) {
+        CoSimulationSlave slave = fmu.asCoSimulationFmu().newInstance();
+
+        slave.simpleSetup();
+
+        double[] angles = new double[]{0.0, Math.PI/2, -Math.PI/2, 0.0, 0.0, 0.0};
+        double[] velocities = new double[6];
+
+        double[] targetAngles = new double[]{ 7.7366e-06, 1.5708e+00, -1.5708e+00, 7.7366e-06, 7.7366e-06, 7.7366e-06};
+        double[] targetVel = new double[]{0.0005, -0.0009, 0.0009, 0.0005, 0.0005, 0.0005};
+        double[] targetsAcc = new double[]{0.0183, -0.0366, 0.0366, 0.0183, 0.0183, 0.0183};
+
+        double[] inVals = new double[inVrs.length];
+
+        boolean[] setFlags = new boolean[inVrs.length];
+
+        double kp = 3000.0;
+        // inVals[name2inIdx.get("kp")] = kp;
+        // setFlags[name2inIdx.get("kp")] = true;
+
+        int idxKp = name2inIdx.get("kp");
+        long vrKp = inVrs[idxKp];
+        
+        double kd = 10.0;
+        // inVals[name2inIdx.get("kd")] = kd;
+        // setFlags[name2inIdx.get("kd")] = true;
+
+        int idxKd = name2inIdx.get("kd");
+        long vrKd = inVrs[idxKd];
+        
+        for (int j = 0; j < 6; j++) {
+            inVals[name2inIdx.get("angle_" + j)] = angles[j];
+            setFlags[name2inIdx.get("angle_" + j)] = true;
+
+            inVals[name2inIdx.get("angle_target_" + j)] = targetAngles[j];
+            setFlags[name2inIdx.get("angle_target_" + j)] = true;
+
+            inVals[name2inIdx.get("velocity_" + j)] = velocities[j];
+            setFlags[name2inIdx.get("velocity_" + j)] = true;
+
+            inVals[name2inIdx.get("velocity_target_" + j)] = targetVel[j];
+            setFlags[name2inIdx.get("velocity_target_" + j)] = true;
+
+            inVals[name2inIdx.get("acceleration_target_" + j)] = targetsAcc[j];
+            setFlags[name2inIdx.get("acceleration_target_" + j)] = true;
+        }
+
+        System.out.println("=== Input coverage ===");
+        for (int i = 0; i < inNames.length; i++) {
+            System.out.printf("%-25s : %s%n",
+                inNames[i],
+                setFlags[i] 
+                ? String.format("SET (value=%.5f)", inVals[i]) 
+                : "NOT SET!");
+        }
+        
+        // slave.setupExperiment();
+        // slave.enterInitializationMode();
+
+        slave.writeReal(new long[]{vrKp, vrKd}, new double[]{kp, kd});
+        slave.writeReal(inVrs, inVals);
+
+        slave.exitInitializationMode();
+        
+        slave.doStep(0.0, 0.01);
+
+        double[] outVals = new double[outVrs.length];
+        slave.readReal(outVrs, outVals);
+
+        System.out.println("Torques:");
+        for (int j = 0; j < 6; j++) {
+            double tq = outVals[name2outIdx.get("torque_" + j)];
+            System.out.printf(" Joint %d: %.3f%n", j, tq);
+        }
+
+        slave.terminate();
+        fmu.close();
     }
 
     public void testDynamics() throws Exception {

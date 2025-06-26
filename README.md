@@ -32,6 +32,10 @@ LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libpython3.10.so java -jar ../../lib/fmu_te
 
 ## FMU Tester
 
+```bash
+ln -s /usr/bin/python3 /usr/bin/python
+```
+
 Build:
 ```bash
 mvn clean package
@@ -50,3 +54,8 @@ java -jar target/fmu-test-1.0-SNAPSHOT-jar-with-dependencies.jar ControllerFMU.f
 java -jar target/fmu-test-1.0-SNAPSHOT-jar-with-dependencies.jar DynamicsFMU.fmu dynamics
 java -jar target/fmu-test-1.0-SNAPSHOT-jar-with-dependencies.jar TrajectoryFMU.fmu trajectory
 ```
+
+## Not solved problem
+
+[FMI native bridge] status = Fatal, instanceName = ControllerFMU_d95de32c-ba57-42d8-aaeb-7d724ab9ab36, category = : Fatal py exception encountered: [setReal] PyObject_CallMethod
+"'NoneType' object is not callable"
